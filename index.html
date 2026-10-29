@@ -1,1616 +1,1799 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leon Vasari — VHS Filmography Shelf Hero</title>
+  <title>Distill — Built for people. Read by machines.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Noto+Sans+JP:wght@500&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --paper: #EDEBE6;
-      --sheet: #F4F2ED;
-      --ink: #141414;
-      --muted: #6D6A63;
-      --cobalt: #1F3FB0;
-      --rule: rgba(20,20,20,.9);
-      --ease: cubic-bezier(.2,.8,.2,1);
-      --H: min(46vh, 31vw);
-      --ws: 50px;
-      --d: 150px;
-      --h-val: 300px;
+      --bg: #ffffff;          /* Pure White Background */
+      --ink: #000000;         /* Deep Black Headings & Logo */
+      --body: #111111;        /* Dark Ink Body Text */
+      --muted: #737373;       /* Muted Labels */
+      --code: #525252;        /* HTML Code Text */
+      --comment: #999999;     /* Comments */
+      --hot: #ff3636;         /* Bold Red Main Accent */
+      --hot-soft: #ffebeb;    /* Soft Red Badge Pill */
+      --cw: 46vw;
+      --ch: 52vh;
+      --gap: 4.75vw;
+      --top: 40.2vh;
+      --sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --serif: "Newsreader", Georgia, serif;
+      --mono: "IBM Plex Mono", ui-monospace, Menlo, Monaco, Consolas, monospace;
     }
+
 
     @media (max-width: 767px) {
       :root {
-        --H: min(60vw, 40svh);
+        --cw: 84vw;
+        --ch: 54vw;
+        --gap: 7vw;
+        --top: 54svh;
+      }
+    }
+    @media (max-width: 767px) and (max-height: 700px) {
+      :root {
+        --top: 58svh;
       }
     }
 
-    *, *::before, *::after {
+    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    body {
-      width: 100vw;
-      height: 100vh;
+    html, body {
+      width: 100%;
+      height: 100%;
       overflow: hidden;
-      user-select: none;
-      -webkit-user-select: none;
-      background-color: var(--paper);
-      color: var(--ink);
-      font-family: "Inter Tight", "Noto Sans JP", system-ui, sans-serif;
+      background-color: var(--bg);
+      color: var(--body);
+      font-family: var(--sans);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    @media (pointer: fine) {
-      html, body, button, a {
-        cursor: none !important;
-      }
+    .stage {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
     }
 
-    .lbl {
-      font-family: "Inter Tight", "Noto Sans JP", system-ui, sans-serif;
-      font-weight: 600;
-      font-size: 10.5px;
-      line-height: 1;
-      letter-spacing: .09em;
-      text-transform: uppercase;
-    }
-
-    .box {
-      display: inline-flex;
+    /* NAV */
+    .nav {
+      height: 56px;
+      padding: 0 20px;
+      display: flex;
       align-items: center;
-      justify-content: center;
-      height: 21px;
-      padding: 0 8px;
-      border: 1px solid var(--rule);
-      color: var(--ink);
-      text-decoration: none;
-      background: transparent;
-      user-select: none;
-    }
-
-    /* Probe element to measure --H in px */
-    #h-probe {
-      position: fixed;
-      visibility: hidden;
-      pointer-events: none;
-      height: var(--H);
-      top: -9999px;
-      left: -9999px;
-    }
-
-    /* 1. Top bar */
-    .top-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 84px;
-      padding: 0 32px;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      z-index: 20;
-    }
-
-    .top-left {
-      justify-self: start;
-    }
-
-    .top-left .box {
-      color: var(--ink);
+      gap: 56px;
+      position: relative;
+      z-index: 40;
     }
 
     .logo {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 5px;
-      color: var(--cobalt);
+      gap: 8px;
       text-decoration: none;
-    }
-
-    .logo-line1 {
-      font-family: "Noto Serif SC", "Newsreader", Georgia, serif;
-      font-weight: 700;
-      font-size: 22px;
-      letter-spacing: .04em;
-      line-height: 1;
-    }
-
-    .logo-line2 {
-      font-family: "Inter Tight", "Noto Sans JP", system-ui, sans-serif;
-      font-weight: 600;
-      font-size: 9px;
-      letter-spacing: .34em;
-      padding-left: .34em;
-      line-height: 1;
-    }
-
-    .top-right {
-      justify-self: end;
-    }
-
-    /* 2. Decade tabs */
-    .decade-nav {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      top: calc(50% - var(--H) / 2 - 86px);
-      display: inline-flex;
-      height: 23px;
-      z-index: 20;
-    }
-
-    .tab-indicator {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 23px;
-      background: var(--cobalt);
-      z-index: 1;
-      pointer-events: none;
-      transition: transform .6s var(--ease), width .6s var(--ease);
-      will-change: transform, width;
-    }
-
-    .tab-btn {
-      height: 23px;
-      padding: 0 11px;
-      border: 1px solid var(--rule);
-      margin-left: -1px;
-      background: transparent;
-      white-space: nowrap;
-      position: relative;
-      z-index: 2;
       color: var(--ink);
-      transition: color .45s var(--ease);
-      outline: none;
+      cursor: pointer;
+    }
+    .logo-text {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 23px;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .logo-icon {
+      width: 19px;
+      height: 23px;
+      flex-shrink: 0;
+      display: block;
     }
 
-    .tab-btn:first-of-type {
-      margin-left: 0;
-    }
-
-    .tab-btn.active {
-      color: #FFFFFF;
-    }
-
-    /* 3. The shelf (3D stage) */
-    .shelf {
-      position: fixed;
-      left: 0;
-      right: 0;
-      width: 100vw;
-      top: calc(50% - var(--H) / 2 - 40px);
-      height: calc(var(--H) + 80px);
-      perspective: 2200px;
-      perspective-origin: 50% 50%;
-      touch-action: pan-y;
-      z-index: 10;
+    .nav-links {
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 38px;
+    }
+    .nav-link {
+      font-family: var(--sans);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--body);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.2s ease;
+      cursor: pointer;
+    }
+    .nav-link:hover {
+      color: var(--ink);
+    }
+    .nav-chevron {
+      width: 8px;
+      height: 5px;
+      margin-left: 6px;
+      opacity: 0.7;
     }
 
-    .stage {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 0;
-      height: 0;
-      transform-style: preserve-3d;
+    .nav-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
-    
-    .tape {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 0;
-      height: 0;
-      transform-style: preserve-3d;
+    .nav-btn-text {
+      font-family: var(--sans);
+      font-weight: 500;
+      font-size: 12.5px;
+      color: var(--body);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px 0;
+      transition: color 0.2s ease;
+    }
+    .nav-btn-text:hover {
+      color: var(--ink);
+    }
+    .nav-btn-outline {
+      height: 32px;
+      padding: 0 17px;
+      border: 1px solid #C4C9CF;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 9999px;
+      font-family: var(--sans);
+      font-weight: 500;
+      font-size: 12.5px;
+      color: var(--body);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .nav-btn-outline:hover {
+      background: rgba(255, 255, 255, 0.6);
+      border-color: #A3AAB2;
+      transform: translateY(-1px);
+    }
+    .nav-btn-hot {
+      height: 32px;
+      padding: 0 17px;
+      background: var(--hot);
+      border-radius: 9999px;
+      font-family: var(--sans);
+      font-weight: 500;
+      font-size: 12.5px;
+      color: #FFFFFF;
+      text-decoration: none;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-btn-hot:hover {
+      opacity: 0.94;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 90, 31, 0.3);
+    }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 34vw;
+      gap: 4vw;
+      padding: 30px 8.9vw 0;
+      position: relative;
+      z-index: 30;
+      pointer-events: auto;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 11.5px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--body);
+      margin-bottom: 14px;
+    }
+
+    .hero-headline {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(30px, 3vw, 58px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .hero-headline em {
+      font-style: italic;
+      font-family: var(--serif);
+    }
+
+    .hero-paragraph {
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: clamp(14px, 1.05vw, 19px);
+      line-height: 1.55;
+      color: var(--body);
+      max-width: 34vw;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      padding: 0 22px;
+      background: var(--hot);
+      border-radius: 9999px;
+      color: #FFFFFF;
+      font-family: var(--sans);
+      font-weight: 500;
+      font-size: 13px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease;
       will-change: transform;
     }
+        .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 90, 31, 0.38);
+    }
 
-    .sp, .cv {
+    /* BELT CONTAINER */
+    .belt {
       position: absolute;
-      height: var(--h-val);
-      top: calc(-0.5 * var(--h-val));
-      backface-visibility: hidden;
-      border-radius: 2px;
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
+      left: 0;
+      width: 100%;
+      top: calc(var(--top) - 70px);
+      height: calc(var(--ch) + 140px);
+      cursor: grab;
+      touch-action: pan-y;
+      user-select: none;
+      z-index: 10;
+    }
+    .belt.is-dragging {
+      cursor: grabbing;
     }
 
-    .sp {
-      width: var(--ws);
-      left: calc(-0.5 * var(--ws));
-      transform: translateZ(calc(0.5 * var(--d)));
-    }
-
-    .cv {
-      width: var(--d);
-      left: calc(-0.5 * var(--d));
-      transform: rotateY(90deg) translateZ(calc(0.5 * var(--ws)));
-      box-shadow: 0 30px 60px -28px rgba(20,16,10,.55);
-    }
-
-    .sp::after, .cv::after {
-      content: "";
+    /* LAYER 1: CODES */
+    .codes {
       position: absolute;
       inset: 0;
-      border-radius: 2px;
-      background-color: #000000;
-      opacity: var(--shade, 0);
+      pointer-events: none;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24vw);
+      mask-image: linear-gradient(90deg, transparent 0, #000 24vw);
+    }
+    @media (max-width: 767px) {
+      .codes {
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30vw);
+        mask-image: linear-gradient(90deg, transparent 0, #000 30vw);
+      }
+    }
+
+    .code {
+      position: absolute;
+      top: 70px;
+      left: 0;
+      width: var(--cw);
+      height: var(--ch);
+      white-space: pre;
+      overflow: hidden;
+      container-type: inline-size;
+      pointer-events: none;
+      will-change: transform, clip-path;
+      visibility: hidden;
+    }
+    .code-html {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      color: var(--code);
+      font-family: var(--mono);
+      font-size: 1.56cqw;
+      line-height: 1.39;
+      font-weight: 400;
+    }
+    .code-meta {
+      position: absolute;
+      top: 0;
+      left: 51%;
+      width: 49%;
+      color: var(--comment);
+      font-family: var(--mono);
+      font-size: 1.56cqw;
+      line-height: 1.39;
+      font-weight: 400;
+    }
+
+    /* LAYER 2: CARDS */
+    .cards {
+      position: absolute;
+      inset: 0;
       pointer-events: none;
     }
 
-    /* 4. Play ring */
-    .play-ring {
-      position: fixed;
+    .card {
+      position: absolute;
+      top: 70px;
+      left: 0;
+      width: var(--cw);
+      height: var(--ch);
+      border-radius: 1.6vw;
+      overflow: hidden;
+      color: #FFFFFF;
+      font-family: var(--sans);
+      will-change: transform, clip-path;
+      user-select: none;
+      container-type: inline-size;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    /* LAYER 3: CANVAS FX */
+    canvas.fx {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* SCANNER LINE */
+    .scan {
+      position: absolute;
+      left: 50%;
+      top: calc(var(--top) - 14px);
+      height: calc(var(--ch) + 40px);
+      width: 0;
+      z-index: 20;
+      pointer-events: none;
+    }
+    .scan i {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -2px;
+      width: 4px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #ff5e5e 0%, #FF3636 12%, #FF3636 88%, #ff5e5e 100%);
+      box-shadow: 0 0 10px 2px rgba(255, 54, 54, 0.85), 0 0 34px 10px rgba(255, 54, 54, 0.38);
+    }
+    .scan b {
+      position: absolute;
+      left: 0;
       width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: 1px solid var(--cobalt);
-      background: rgba(237,235,230,.75);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 30;
-      padding: 0;
-      outline: none;
-      will-change: transform;
-      transform: translate(-50%, -50%) scale(0);
-      transform-origin: center center;
+      top: 4%;
+      height: 92%;
+      background: linear-gradient(90deg, rgba(255, 54, 54, 0.55) 0%, rgba(255, 54, 54, 0) 100%);
+      filter: blur(6px);
+      pointer-events: none;
     }
 
-    .play-icon {
-      transform: translateX(2px);
-    }
-
-    /* 5. Caption */
-    .caption-container {
-      position: fixed;
+    /* COUNTER BADGE */
+    .badge {
+      position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      top: calc(50% + var(--H) / 2 + 30px);
+      top: calc(var(--top) - 60px);
+      z-index: 30;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 9px;
       pointer-events: none;
-      z-index: 20;
     }
-
-    .caption-mask {
-      position: relative;
-      overflow: hidden;
-      width: min(92vw, 760px);
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .caption-title-mask {
-      font-family: "Newsreader", Georgia, serif;
+    .badge-label {
+      font-family: var(--sans);
       font-weight: 400;
-      font-size: 31px;
-      line-height: 1.12;
-      letter-spacing: -.01em;
-      color: var(--ink);
-      height: 38px;
-    }
-
-    .caption-subtitle-mask {
-      font-family: "Inter Tight", "Noto Sans JP", system-ui, sans-serif;
-      font-weight: 500;
-      font-size: 10.5px;
+      font-size: 11.5px;
+      color: var(--muted);
+      letter-spacing: -0.01em;
       line-height: 1;
-      letter-spacing: .09em;
-      text-transform: uppercase;
-      color: var(--cobalt);
-      height: 16px;
     }
-
-    .caption-year-mask {
-      font-family: "Inter Tight", "Noto Sans JP", system-ui, sans-serif;
+    .badge-pill {
+      height: 26px;
+      border-radius: 9999px;
+      overflow: hidden;
+      box-shadow: 0 0 18px rgba(255, 54, 54, 0.35);
+      font-family: var(--mono);
       font-weight: 500;
+      font-size: 12.5px;
+      display: flex;
+      align-items: stretch;
+    }
+    .badge-num {
+      background: var(--hot);
+      color: #FFFFFF;
+      padding: 0 11px 0 13px;
+      min-width: 8.2ch;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    .badge-pct {
+      background: var(--hot-soft);
+      color: #D61a1a;
       font-size: 11px;
-      line-height: 1;
-      letter-spacing: .08em;
-      color: var(--ink);
-      height: 16px;
-    }
-
-    .caption-mask span {
-      display: block;
-      width: 100%;
-      will-change: transform;
-    }
-
-    /* 6. Arrows */
-    .shelf-arrow {
-      position: fixed;
-      top: calc(50% + var(--H) / 2 + 40px);
-      width: 44px;
-      height: 44px;
+      padding: 0 12px 0 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: transparent;
-      border: none;
-      color: var(--ink);
-      z-index: 25;
-      padding: 0;
-      outline: none;
+      line-height: 1;
     }
 
-    .arrow-left {
-      left: 20px;
-    }
-
-    .arrow-right {
-      right: 20px;
-    }
-
-    /* 7. Footer */
-    .footer {
-      position: fixed;
-      left: 32px;
-      right: 32px;
-      bottom: 26px;
+    /* KESSLER CARD INTERNALS */
+    .k-nav {
+      position: absolute;
+      top: 4cqw;
+      left: 4.4cqw;
+      right: 4.4cqw;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 20;
+      z-index: 2;
     }
-
-    .footer-links {
-      display: flex;
-      gap: 4px;
-    }
-
-    .footer-link {
-      color: var(--ink);
-      text-decoration: none;
-    }
-
-    /* 8. Paper grain */
-    .grain-layer {
-      position: fixed;
-      inset: 0;
-      z-index: 40;
-      pointer-events: none;
-      mix-blend-mode: multiply;
-      opacity: .55;
-      background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22220%22%20height%3D%22220%22%3E%0A%20%20%3Cfilter%20id%3D%22grain%22%3E%0A%20%20%20%20%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.85%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22/%3E%0A%20%20%20%20%3CfeColorMatrix%20type%3D%22matrix%22%20values%3D%220%200%200%200%200.45%20%200%200%200%200%200.42%20%200%200%200%200%200.38%20%200%200%200%200.22%200%22/%3E%0A%20%20%3C/filter%3E%0A%20%20%3Crect%20width%3D%22220%22%20height%3D%22220%22%20filter%3D%22url%28%23grain%29%22/%3E%0A%3C/svg%3E');
-      background-repeat: repeat;
-      background-size: 220px 220px;
-    }
-
-    /* 9. Custom cursor */
-    .cursor {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 58px;
-      height: 58px;
-      margin: -29px 0 0 -29px;
-      pointer-events: none;
-      z-index: 100;
-      will-change: transform;
-    }
-
-    @media (pointer: coarse) {
-      .cursor {
-        display: none !important;
-      }
-    }
-
-    .cursor-ring {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 1.5px solid var(--ink);
-      background-color: transparent;
-      transform: scale(1);
-      transition: transform .5s var(--ease), background-color .4s var(--ease), border-color .4s var(--ease);
-      box-sizing: border-box;
-    }
-
-    .cursor-dot {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 6px;
-      height: 6px;
-      margin: -3px 0 0 -3px;
-      border-radius: 50%;
-      background-color: var(--ink);
-      transform: scale(1);
-      transition: transform .4s var(--ease);
-    }
-
-    .cursor-label {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-family: "Inter Tight", "Noto Sans JP", system-ui, sans-serif;
-      font-weight: 600;
-      font-size: 10px;
-      line-height: 1.25;
-      letter-spacing: .1em;
-      color: #FFFFFF;
-      transform: scale(0);
-      transition: transform .45s var(--ease);
-    }
-
-    /* Cursor states */
-    .cursor.spine .cursor-ring {
-      transform: scale(0.72);
-      border-color: var(--ink);
-      background-color: transparent;
-    }
-    .cursor.spine .cursor-dot {
-      transform: scale(1);
-    }
-    .cursor.spine .cursor-label {
-      transform: scale(0);
-    }
-
-    .cursor.btn .cursor-ring {
-      transform: scale(0.55);
-      border-color: var(--ink);
-      background-color: transparent;
-    }
-    .cursor.btn .cursor-dot {
-      transform: scale(0);
-    }
-    .cursor.btn .cursor-label {
-      transform: scale(0);
-    }
-
-    .cursor.open .cursor-ring {
-      transform: scale(1.75);
-      background-color: var(--cobalt);
-      border-color: var(--cobalt);
-    }
-    .cursor.open .cursor-dot {
-      transform: scale(0);
-    }
-    .cursor.open .cursor-label {
-      transform: scale(1);
-    }
-
-    /* 10. Detail sheet dialog */
-    .detail {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 60;
-      background: var(--sheet);
-      visibility: hidden;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: 4vw;
-      padding: 110px 6vw 56px 7vw;
-      box-sizing: border-box;
-      will-change: clip-path, transform;
-    }
-
-    .detail-close-btn {
-      position: absolute;
-      top: 32px;
-      left: 31px;
-      z-index: 10;
-    }
-
-    .detail-logo-band {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 84px;
+    .k-logo {
       display: flex;
       align-items: center;
-      justify-content: center;
-      pointer-events: none;
-    }
-
-    .detail-left-col {
-      align-self: center;
-      justify-self: start;
-      max-width: 520px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .detail-line-mask {
-      overflow: hidden;
-      position: relative;
-    }
-
-    .detail-line-mask > * {
-      will-change: transform;
-    }
-
-    .detail-subtitle {
-      color: var(--cobalt);
-    }
-
-    .detail-title {
-      font-family: "Newsreader", Georgia, serif;
-      font-weight: 400;
-      font-size: clamp(44px, 5.4vw, 84px);
+      gap: 1.3cqw;
+      font-weight: 500;
+      font-size: 4.6cqw;
+      letter-spacing: -0.03em;
       line-height: 1;
-      letter-spacing: -.025em;
-      color: var(--ink);
+    }
+    .k-logo-svg {
+      width: 5.4cqw;
+      height: 4.2cqw;
+      flex-shrink: 0;
+    }
+    .k-menu {
+      display: flex;
+      align-items: center;
+      gap: 3.4cqw;
+      font-weight: 500;
+      font-size: 1.32cqw;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+    .k-menu-pill {
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 9999px;
+      padding: 0.7cqw 1.6cqw;
+      margin: -0.7cqw -1.6cqw;
     }
 
-    .detail-meta {
-      color: var(--muted);
-    }
+    /* SPECIFIC CARDS */
 
-    .detail-synopsis {
-      font-family: "Newsreader", Georgia, serif;
+    /* Card 1: Home */
+    #card-home {
+      background-image: linear-gradient(180deg, rgba(20, 10, 4, 0.25) 0%, rgba(20, 10, 4, 0) 30%, rgba(20, 10, 4, 0.55) 100%),
+        url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/0e201fcd-ffc0-46a0-bd06-faa07bf0e84b.webp');
+      background-size: cover;
+      background-position: center;
+      background-color: #26160F;
+    }
+    .card-1-bottom {
+      position: absolute;
+      bottom: 4.4cqw;
+      left: 4.4cqw;
+      right: 4.4cqw;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 2;
+    }
+    .card-1-stats {
+      display: flex;
+      align-items: flex-end;
+      gap: 4cqw;
+    }
+    .card-1-stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .card-1-num {
+      font-weight: 300;
+      font-size: 9cqw;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+    }
+    .card-1-label {
+      font-size: 1.9cqw;
+      opacity: 0.9;
+      margin-top: 0.6cqw;
+    }
+    .card-1-divider {
+      width: 1px;
+      height: 7cqw;
+      background: rgba(255, 255, 255, 0.35);
+      margin-bottom: 0.5cqw;
+    }
+    .card-1-tagline {
+      font-size: 2.2cqw;
+      width: 24cqw;
+      line-height: 1.25;
       font-weight: 400;
-      font-size: 17px;
-      line-height: 1.5;
-      max-width: 42ch;
-      color: var(--ink);
+      opacity: 0.95;
     }
 
-    .detail-credit {
-      font-family: "Newsreader", Georgia, serif;
+    /* Card 2: Price */
+    #card-price {
+      background: radial-gradient(120% 90% at 20% 110%, #FF6A1F 0%, #FF9A4A 35%, #F7C79A 62%, #EFD9C4 100%);
+      color: #2A1406;
+    }
+    #card-price .k-nav {
+      color: #2A1406;
+    }
+    #card-price .k-menu-pill {
+      border-color: rgba(42, 20, 6, 0.4);
+    }
+    .card-2-price {
+      position: absolute;
+      top: 38%;
+      left: 4.4cqw;
+      font-weight: 300;
+      font-size: 13cqw;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      color: #2A1406;
+    }
+    .card-2-price sup {
+      font-size: 0.45em;
+      vertical-align: 0.4em;
+      margin-right: 0.05em;
+      font-weight: 300;
+    }
+    .card-2-sub {
+      position: absolute;
+      top: 62%;
+      left: 4.4cqw;
+      font-family: var(--mono);
+      font-size: 1.6cqw;
+      letter-spacing: 0.05em;
+      opacity: 0.75;
+      color: #2A1406;
+      font-weight: 500;
+    }
+    .card-2-plans {
+      position: absolute;
+      top: 36%;
+      right: 4.4cqw;
+      width: 36cqw;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-2-plan-row {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid rgba(42, 20, 6, 0.25);
+      padding: 1.4cqw 0;
+      font-size: 1.8cqw;
+      font-weight: 500;
+      color: #2A1406;
+    }
+    .card-2-btn {
+      position: absolute;
+      bottom: 4.4cqw;
+      left: 4.4cqw;
+      padding: 1.4cqw 2.8cqw;
+      background: #2A1406;
+      color: #F7E6D6;
+      border-radius: 9999px;
+      font-size: 1.8cqw;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      }
+        .card-2-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Card 3: Case */
+    #card-case {
+      background-color: #22140D;
+    }
+    .card-3-bg {
+      position: absolute;
+      inset: -6%;
+      width: 112%;
+      height: 112%;
+      background-image: url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/2bebad68-8177-446a-9550-d64074166364.webp');
+      background-size: cover;
+      background-position: center;
+      filter: blur(1.4cqw) saturate(1.1);
+      transform: scale(1.12);
+      z-index: 0;
+    }
+    .card-3-veil {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(25, 14, 8, 0.15) 0%, rgba(25, 14, 8, 0.55) 100%);
+      z-index: 1;
+    }
+    .card-3-kicker {
+      position: absolute;
+      top: 17%;
+      left: 4.4cqw;
+      font-family: var(--mono);
+      font-size: 1.4cqw;
+      letter-spacing: 0.08em;
+      opacity: 0.85;
+      z-index: 2;
+    }
+    .card-3-title {
+      position: absolute;
+      top: 24%;
+      left: 4.4cqw;
+      width: 56cqw;
+      font-family: var(--serif);
+      font-size: 4.6cqw;
+      line-height: 1.15;
+      font-weight: 400;
+      z-index: 2;
+    }
+    .card-3-stats {
+      position: absolute;
+      bottom: 4.4cqw;
+      left: 4.4cqw;
+      right: 4.4cqw;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3cqw;
+      z-index: 2;
+    }
+    .card-3-stat-col {
+      border-top: 1px solid rgba(255, 255, 255, 0.35);
+      padding-top: 1.4cqw;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-3-stat-num {
+      font-weight: 300;
+      font-size: 6cqw;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+    .card-3-stat-label {
+      font-size: 1.5cqw;
+      opacity: 0.85;
+      margin-top: 0.6cqw;
+    }
+
+    /* Card 4: Vision */
+    #card-vision {
+      background-color: #1B1311;
+    }
+    .card-4-tiles {
+      position: absolute;
+      top: 21%;
+      height: 46%;
+      left: 4.4cqw;
+      right: 4.4cqw;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.2fr;
+      gap: 2cqw;
+      z-index: 2;
+    }
+    .card-4-tile-1 {
+      border-radius: 1.4cqw;
+      background-image: url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/e80ba08d-d7b6-4b27-b0cd-8d0ad09c788c.webp');
+      background-size: cover;
+      background-position: center;
+      background-color: #331A12;
+    }
+    .card-4-tile-2 {
+      border-radius: 1.4cqw;
+      background-image: url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/62b0d7c1-3eb7-44bd-9b19-57b975fb250f.webp');
+      background-size: cover;
+      background-position: center;
+      background-color: #242230;
+    }
+    .card-4-quote {
+      font-family: var(--serif);
+      font-size: 3.4cqw;
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      padding: 0 1cqw;
+    }
+    .card-4-quote em {
+      opacity: 0.75;
       font-style: italic;
+    }
+    .card-4-footer {
+      position: absolute;
+      bottom: 4.4cqw;
+      left: 4.4cqw;
+      right: 4.4cqw;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 1.6cqw;
+      opacity: 0.7;
+      line-height: 1.35;
+      z-index: 2;
+    }
+
+    /* Card 5: Alloy */
+    #card-alloy {
+      background-color: #140C08;
+    }
+    .card-5-bg {
+      position: absolute;
+      inset: -5%;
+      width: 110%;
+      height: 110%;
+      background-image: linear-gradient(90deg, transparent 40%, rgba(20, 12, 8, 0.75) 100%),
+        url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/156ff74d-ee37-4443-8f3a-11ae2095ed4c.webp');
+      background-size: cover;
+      background-position: center;
+      filter: blur(0.6cqw);
+      transform: scale(1.06);
+      z-index: 0;
+    }
+    .card-5-left {
+      position: absolute;
+      bottom: 4.4cqw;
+      left: 4.4cqw;
+      font-family: var(--serif);
+      font-size: 7.4cqw;
+      line-height: 0.98;
       font-weight: 400;
-      font-size: 15px;
-      color: var(--muted);
+      z-index: 2;
     }
-
-    .detail-watch-btn {
-      height: 44px;
-      padding: 0 20px;
-      margin-top: 10px;
-      border: 1px solid var(--cobalt);
-      color: var(--cobalt);
-      font-size: 10.5px;
-      align-self: flex-start;
+    .card-5-left em {
+      font-style: italic;
     }
-
-    .detail-right-col {
-      align-self: center;
-      justify-self: center;
+    .card-5-right {
+      position: absolute;
+      bottom: 4.4cqw;
+      right: 4.4cqw;
+      width: 30cqw;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      width: 100%;
+      flex-direction: column;
+      z-index: 2;
     }
-
-    .detail-poster-wrap {
-      height: min(100%, 78vh);
-      aspect-ratio: 474 / 900;
+    .card-5-spec-row {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 1.2cqw 0;
+      font-size: 1.6cqw;
+      font-weight: 400;
     }
 
-    .detail-poster-svg {
-      width: 100%;
-      height: 100%;
+    /* Card 6: Journal */
+    #card-journal {
+      background-color: #E9ECF1;
+      color: #121A2A;
+    }
+    #card-journal .k-nav {
+      color: #121A2A;
+      opacity: 0.7;
+    }
+    #card-journal .k-menu-pill {
+      border-color: rgba(18, 26, 42, 0.3);
+    }
+    .card-6-title {
+      position: absolute;
+      top: 23%;
+      left: 4.4cqw;
+      font-family: var(--serif);
+      font-size: 5.6cqw;
+      line-height: 1.05;
+      color: #121A2A;
+      font-weight: 400;
+      z-index: 2;
+    }
+    .card-6-title em {
+      color: #46618E;
+      font-style: italic;
       display: block;
     }
+    .card-6-posts {
+      position: absolute;
+      bottom: 4.4cqw;
+      left: 4.4cqw;
+      right: 4.4cqw;
+      display: grid;
+      grid-template-columns: 1.25fr 1fr 1fr;
+      gap: 2cqw;
+      z-index: 2;
+    }
+    .card-6-post {
+      display: flex;
+      flex-direction: column;
+    }
+    .card-6-thumb {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 1.2cqw;
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 1.2cqw;
+    }
+    .card-6-kicker {
+      font-family: var(--mono);
+      font-size: 1.2cqw;
+      color: #6A7891;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4cqw;
+    }
+    .card-6-post-title {
+      font-size: 1.5cqw;
+      font-weight: 500;
+      color: #121A2A;
+      line-height: 1.25;
+    }
 
-    /* Responsive (<= 767px) */
+    /* INTERACTION TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--ink);
+      color: #FFFFFF;
+      padding: 10px 18px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-family: var(--sans);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .toast-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--hot);
+    }
+
+    /* RESPONSIVE (≤ 767px) */
     @media (max-width: 767px) {
-      .top-bar {
-        height: 64px;
+      .nav {
         padding: 0 16px;
+        gap: 0;
       }
-      .logo-line1 {
-        font-size: 17px;
+      .nav-links, .nav-btn-text, .nav-btn-outline {
+        display: none !important;
       }
-      .logo-line2 {
-        font-size: 7.5px;
-      }
-      .top-left .lbl, .top-right.lbl {
-        font-size: 9px;
-      }
-      .top-right {
-        display: none;
-      }
-      .decade-nav {
-        top: calc(50% - var(--H) / 2 - 70px);
-      }
-      .tab-btn {
-        padding: 0 7px;
-        font-size: 9px;
-      }
-      .caption-title-mask {
-        font-size: 24px;
-      }
-      .shelf-arrow {
-        width: 36px;
-        height: 36px;
-      }
-      .arrow-left {
-        left: 6px;
-      }
-      .arrow-right {
-        right: 6px;
-      }
-      .footer {
-        left: 16px;
-        right: 16px;
-        bottom: 18px;
-      }
-      .footer .lbl {
-        font-size: 9px;
+      .nav-btn-hot {
+        height: 30px;
+        padding: 0 13px;
+        font-size: 12px;
       }
 
-      .detail {
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-        padding: 84px 22px 40px;
-        gap: 24px;
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 18px 20px 0;
       }
-      .detail-close-btn {
-        top: 16px;
-        left: 21px;
+      .hero-eyebrow {
+        margin-bottom: 8px;
       }
-      .detail-logo-band {
-        height: 64px;
+      .hero-headline {
+        font-size: 34px;
+        line-height: 1.1;
       }
-      .detail-right-col {
-        order: -1;
-        height: 46svh;
-        min-height: 46svh;
+      .hero-paragraph {
+        font-size: 14px;
+        max-width: 100%;
+        line-height: 1.5;
       }
-      .detail-poster-wrap {
-        height: 46svh;
-      }
-      .detail-title {
-        font-size: 42px;
-      }
-      .detail-synopsis {
-        font-size: 16px;
+      .hero-cta {
+        margin-top: 14px;
       }
     }
   </style>
 </head>
 <body>
-  <div id="h-probe"></div>
-
-  <!-- 1. Top bar -->
-  <header class="top-bar">
-    <div class="top-left">
-      <a href="#back" class="box lbl" id="back-link">BACK </a>
-    </div>
-    <a href="#hero" class="logo" id="logo-link">
-      <div class="logo-line2">LEON VASARI</div>
-    </a>
-    <div class="top-right lbl">
-      CAREER 1958〜1989
-    </div>
-  </header>
-  
-  <!-- 2. Decade tabs -->
-  <nav class="decade-nav" aria-label="Decades">
-    <div class="tab-indicator" id="tab-indicator"></div>
-    <button class="tab-btn box lbl" data-decade="ALL">ALL </button>
-    <button class="tab-btn box lbl" data-decade="1950s">1950s</button>
-    <button class="tab-btn box lbl" data-decade="1960s">1960s</button>
-    <button class="tab-btn box lbl" data-decade="1970s">1970s</button>
-    <button class="tab-btn box lbl" data-decade="1980s">1980s</button>
-  </nav>
-
-  <!-- 3. The shelf (3D stage) -->
-  <section class="shelf" id="shelf" aria-label="Filmography shelf">
-    <div class="stage" id="stage"></div>
-  </section>
-
-  <!-- 4. Play ring -->
-  <button class="play-ring" id="play-ring" aria-label="Open film">
-    <svg width="12" height="12" viewBox="0 0 12 12" class="play-icon" aria-hidden="true">
-      <polygon points="0,0 12,6 0,12" fill="var(--cobalt)"/>
-    </svg>
-  </button>
-
-  <!-- 5. Caption -->
-  <div class="caption-container" aria-live="polite">
-    <div class="caption-mask caption-title-mask" id="caption-title"></div>
-    <div class="caption-mask caption-subtitle-mask" id="caption-subtitle"></div>
-    <div class="caption-mask caption-year-mask" id="caption-year"></div>
-  </div>
-
-  <!-- 6. Arrows -->
-  <button class="shelf-arrow arrow-left" id="arrow-prev" aria-label="Previous film">
-    <svg width="18" height="10" viewBox="0 0 18 10" aria-hidden="true">
-      <path d="M5 1 L1 5 L5 9 M1 5 L17 5" fill="none" stroke="currentColor" stroke-width="1.2"/>
-    </svg>
-  </button>
-  <button class="shelf-arrow arrow-right" id="arrow-next" aria-label="Next film">
-    <svg width="18" height="10" viewBox="0 0 18 10" aria-hidden="true">
-      <path d="M13 1 L17 5 L13 9 M17 5 L1 5" fill="none" stroke="currentColor" stroke-width="1.2"/>
-    </svg>
-  </button>
-
-  <!-- 7. Footer -->
-  <footer class="footer">
-    <div class="lbl">© LEON VASARI. ALL RIGHTS RESERVED.</div>
-    <div class="lbl footer-links">
-      <a href="#fb" class="footer-link">FB</a> / <a href="#tw" class="footer-link">TW</a>
-    </div>
-  </footer>
-
-  <!-- 8. Paper grain overlay -->
-  <div class="grain-layer" aria-hidden="true"></div>
-
-  <!-- 9. Custom cursor -->
-  <div class="cursor" id="cursor" aria-hidden="true">
-    <div class="cursor-ring"></div>
-    <div class="cursor-dot"></div>
-    <div class="cursor-label">
-      <span>OPEN</span>
-      <span>開く</span>
-    </div>
-  </div>
-
-  <!-- 10. Detail sheet dialog -->
-  <div class="detail" id="detail-dialog" role="dialog" aria-modal="true" aria-label="Film details">
-    <div class="detail-logo-band">
-      <div class="logo">
-        <div class="logo-line1">莱昂·瓦萨里</div>
-        <div class="logo-line2">LEON VASARI</div>
-      </div>
-    </div>
-    <button class="box lbl detail-close-btn" id="detail-close" aria-label="Close details">CLOSE / 閉じる</button>
-    <div class="detail-content detail-left-col">
-      <div class="detail-line-mask"><div class="detail-subtitle lbl" id="detail-subtitle"></div></div>
-      <div class="detail-line-mask"><div class="detail-title" id="detail-title"></div></div>
-      <div class="detail-line-mask"><div class="detail-meta lbl" id="detail-meta"></div></div>
-      <div class="detail-line-mask"><div class="detail-synopsis" id="detail-synopsis"></div></div>
-      <div class="detail-line-mask"><div class="detail-credit">Written and directed by Leon Vasari. 監督作品</div></div>
-      <div class="detail-line-mask"><button class="box lbl detail-watch-btn" id="detail-watch">WATCH THE FILM / 映画を見る</button></div>
-    </div>
-    <div class="detail-right-col">
-      <div class="detail-poster-wrap">
-        <svg class="detail-poster-svg" viewBox="0 0 474 900" aria-hidden="true">
-          <defs>
-            <filter id="ink-filter" x="-50%" y="-50%" width="200%" height="200%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="7" result="noise"/>
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="120" xChannelSelector="R" yChannelSelector="G"/>
-            </filter>
-            <mask id="ink-mask" maskUnits="userSpaceOnUse" x="-200" y="-200" width="874" height="1300">
-              <g filter="url(#ink-filter)">
-                <circle class="ink-blob" cx="150" cy="330" r="0" fill="#ffffff" data-delay="0"/>
-                <circle class="ink-blob" cx="340" cy="600" r="0" fill="#ffffff" data-delay="120"/>
-                <circle class="ink-blob" cx="250" cy="120" r="0" fill="#ffffff" data-delay="220"/>
-                <circle class="ink-blob" cx="90" cy="760" r="0" fill="#ffffff" data-delay="300"/>
-                <circle class="ink-blob" cx="400" cy="250" r="0" fill="#ffffff" data-delay="360"/>
-                <circle class="ink-blob" cx="260" cy="860" r="0" fill="#ffffff" data-delay="420"/>
-                <circle class="ink-blob" cx="230" cy="470" r="0" fill="#ffffff" data-delay="180"/>
-              </g>
-            </mask>
-          </defs>
-          <image id="detail-poster-img" width="474" height="900" preserveAspectRatio="none" mask="url(#ink-mask)" href=""/>
+  <div class="stage">
+    <!-- NAV -->
+    <header class="nav">
+      <a href="#hero" class="logo" id="nav-logo">
+        <svg class="logo-icon" viewBox="0 0 19 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 9.5 1 C 9.5 1 2 11.5 2 15.5 A 7.5 7.5 0 0 0 17 15.5 C 17 11.5 9.5 1 9.5 1 Z" fill="currentColor"/>
+          <path d="M 6.5 12 C 5 14 5 17 7.5 19.5" stroke="var(--bg)" stroke-width="1.7" stroke-linecap="round" fill="none"/>
         </svg>
+        <span class="logo-text">Hireme</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#product" class="nav-link" data-action="Product tour">
+          Product
+          <svg class="nav-chevron" viewBox="0 0 8 5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 1.25L4 3.75L7 1.25"/>
+          </svg>
+        </a>
+        <a href="#use-cases" class="nav-link" data-action="AI agent use cases">
+          Use cases
+          <svg class="nav-chevron" viewBox="0 0 8 5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 1.25L4 3.75L7 1.25"/>
+          </svg>
+        </a>
+        <a href="#resources" class="nav-link" data-action="Documentation & guides">
+          Resources
+          <svg class="nav-chevron" viewBox="0 0 8 5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 1.25L4 3.75L7 1.25"/>
+          </svg>
+        </a>
+        <a href="#pricing" class="nav-link" data-action="Pricing plans">Pricing</a>
+      </nav>
+      
+      <div class="nav-right">
+        <button type="button" class="nav-btn-text" data-action="Sign in portal">Sign in</button>
+        <button type="button" class="nav-btn-outline" data-action="14-day free trial initialized">Start a free trial</button>
+        <button type="button" class="nav-btn-hot" data-action="Hireme interactive demo">Book a demo</button>
+      </div>
+    </header>
+
+    <!-- HERO COPY -->
+    <main class="hero" id="hero">
+      <div class="hero-left">
+        <div class="hero-eyebrow">AI READABILITY</div>
+        <h1 class="hero-headline">
+          Built for people.<br>
+          <em>Read by machines.</em>
+        </h1>
+      </div>
+      <div class="hero-right">
+        <p class="hero-paragraph">
+          Hireme detects AI agents at the edge and serves them a clean, token&#8209;light version of every page, without changing a pixel of what people see.
+        </p>
+        <button type="button" class="hero-cta" data-action="Exploring Hireme edge network">Explore Hireme</button>
+      </div>
+    </main>
+
+    <!-- THE SCANNER LINE -->
+    <div class="scan" aria-hidden="true">
+      <i></i>
+      <b></b>
+    </div>
+
+    <!-- THE COUNTER BADGE -->
+    <div class="badge" aria-live="polite">
+      <div class="badge-label">Token reduction</div>
+      <div class="badge-pill">
+        <div class="badge-num" id="badge-num">−48,193</div>
+        <div class="badge-pct" id="badge-pct">91% less</div>
       </div>
     </div>
+
+    <!-- THE BELT -->
+    <div class="belt" id="belt">
+      <!-- 1. CODE LAYER -->
+      <div class="codes" id="codes-layer">
+        <!-- Code 1: Home -->
+        <div class="code" id="code-0">
+          <div class="code-html">&lt;h1&gt;Kessler — Advanced materials&lt;/h1&gt;
+&lt;p&gt;
+  Advanced materials for a stronger
+  tomorrow. Ceramic-matrix alloys made
+  with desert sand and solar heat.
+&lt;/p&gt;
+
+&lt;h2&gt;At a glance&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Strength: 200x steel by weight&lt;/li&gt;
+  &lt;li&gt;Emissions: 87% lower&lt;/li&gt;
+  &lt;li&gt;Plants: Nevada, Atacama, Oman&lt;/li&gt;
+  &lt;li&gt;Founded: 2019&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Products&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;K-Alloy 7 — structural&lt;/li&gt;
+  &lt;li&gt;Basalt fibre — tensile&lt;/li&gt;
+  &lt;li&gt;Ceramic matrix — thermal&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;a href="/demo"&gt;Book a demo&lt;/a&gt;</div>
+          <div class="code-meta">&lt;!-- distilled: 6,140 tokens --&gt;
+&lt;!-- original:  70,411 tokens --&gt;
+&lt;!-- url:       kessler.co/ --&gt;</div>
+        </div>
+
+        <!-- Code 2: Price -->
+        <div class="code" id="code-1">
+          <div class="code-html">&lt;h1&gt;Kessler — Pricing&lt;/h1&gt;
+&lt;p&gt;
+  Three plans for every scale of
+  production. Start small, scale to
+  full foundry output.
+&lt;/p&gt;
+
+&lt;h2&gt;Pilot — $299 / mo&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Sample batches: 4 / mo&lt;/li&gt;
+  &lt;li&gt;Alloy grades: 2&lt;/li&gt;
+  &lt;li&gt;Support: email&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Industrial — $2,400 / mo&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Tonnage: up to 40 t / mo&lt;/li&gt;
+  &lt;li&gt;Alloy grades: all&lt;/li&gt;
+  &lt;li&gt;Certification: ISO 9001&lt;/li&gt;
+  &lt;li&gt;Support: dedicated engineer&lt;/li&gt;
+&lt;/ul&gt;</div>
+          <div class="code-meta">&lt;!-- distilled: 4,960 tokens --&gt;
+&lt;!-- original:  41,208 tokens --&gt;
+&lt;!-- url:       kessler.co/pricing --&gt;</div>
+        </div>
+
+        <!-- Code 3: Case -->
+        <div class="code" id="code-2">
+          <div class="code-html">&lt;h1&gt;Case study: Atlas Rail&lt;/h1&gt;
+&lt;p&gt;
+  How Atlas Rail cut track weight by
+  a third in eighteen months.
+&lt;/p&gt;
+
+&lt;h2&gt;The challenge&lt;/h2&gt;
+&lt;p&gt;
+  1,200 km of desert line, rails
+  warping above 50 °C every summer.
+&lt;/p&gt;
+
+&lt;h2&gt;The result&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;34% lighter track sections&lt;/li&gt;
+  &lt;li&gt;3.4x longer service life&lt;/li&gt;
+  &lt;li&gt;0 unplanned closures in 2025&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;
+  "We stopped losing summers."
+  — Head of Infrastructure
+&lt;/p&gt;</div>
+          <div class="code-meta">&lt;!-- distilled: 6,300 tokens --&gt;
+&lt;!-- original:  98,432 tokens --&gt;
+&lt;!-- url:       kessler.co/cases/atlas-rail --&gt;</div>
+        </div>
+
+        <!-- Code 4: Vision -->
+        <div class="code" id="code-3">
+          <div class="code-html">&lt;article&gt;
+  &lt;h1&gt;The Kessler vision&lt;/h1&gt;
+  &lt;p&gt;
+    Materials that outlast the people
+    who made them.
+  &lt;/p&gt;
+  &lt;p&gt;
+    We build where the sun is
+    strongest and the sand is free:
+    three plants, one closed loop.
+  &lt;/p&gt;
+
+  &lt;h2&gt;Principles&lt;/h2&gt;
+  &lt;ol&gt;
+    &lt;li&gt;Heat from the sun, not gas&lt;/li&gt;
+    &lt;li&gt;Sand in, scrap back in&lt;/li&gt;
+    &lt;li&gt;Publish every number&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/article&gt;</div>
+          <div class="code-meta">&lt;!-- distilled: 8,215 tokens --&gt;
+&lt;!-- original:  55,870 tokens --&gt;
+&lt;!-- url:       kessler.co/vision --&gt;</div>
+        </div>
+
+        <!-- Code 5: Alloy -->
+        <div class="code" id="code-4">
+          <div class="code-html">&lt;h1&gt;K-Alloy 7&lt;/h1&gt;
+&lt;p&gt;The carbon-negative alloy.&lt;/p&gt;
+
+&lt;h2&gt;Specification&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Tensile strength: 1,940 MPa&lt;/li&gt;
+  &lt;li&gt;Density: 2.9 g/cm³&lt;/li&gt;
+  &lt;li&gt;Max service temp: 1,150 °C&lt;/li&gt;
+  &lt;li&gt;CO₂: −0.4 kg per kg made&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Uses&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Rail, bridges, turbine housings&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;a href="/k-alloy-7.pdf"&gt;Datasheet&lt;/a&gt;</div>
+          <div class="code-meta">&lt;!-- distilled: 5,512 tokens --&gt;
+&lt;!-- original:  63,904 tokens --&gt;
+&lt;!-- url:       kessler.co/products/k-alloy-7 --&gt;</div>
+        </div>
+
+        <!-- Code 6: Journal -->
+        <div class="code" id="code-5">
+          <div class="code-html">&lt;h1&gt;Kessler Journal&lt;/h1&gt;
+&lt;p&gt;Field notes from the flats.&lt;/p&gt;
+
+&lt;article&gt;
+  &lt;h2&gt;Mining nothing but light&lt;/h2&gt;
+  &lt;time&gt;2026-03-14&lt;/time&gt;
+&lt;/article&gt;
+
+&lt;article&gt;
+  &lt;h2&gt;Atacama, year one&lt;/h2&gt;
+  &lt;time&gt;2026-02-02&lt;/time&gt;
+&lt;/article&gt;
+
+&lt;article&gt;
+  &lt;h2&gt;Why we melt sand at noon&lt;/h2&gt;
+  &lt;time&gt;2026-01-09&lt;/time&gt;
+&lt;/article&gt;</div>
+          <div class="code-meta">&lt;!-- distilled: 7,602 tokens --&gt;
+&lt;!-- original:  47,316 tokens --&gt;
+&lt;!-- url:       kessler.co/journal --&gt;</div>
+        </div>
+      </div>
+      
+      <!-- 2. CARDS LAYER -->
+      <div class="cards" id="cards-layer">
+        <!-- Card 1: Home -->
+        <div class="card" id="card-home">
+          <div class="k-nav">
+            <div class="k-logo">
+              <svg class="k-logo-svg" viewBox="0 0 54 42" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+                <polygon points="2,40 18,6 34,40" />
+                <polygon points="20,40 37,6 52,40" />
+              </svg>
+              <span>Kessler</span>
+            </div>
+            <div class="k-menu">
+              <span>PRODUCTS</span>
+              <span>·</span>
+              <span>IMPACT</span>
+              <span>·</span>
+              <span>ABOUT</span>
+            </div>
+          </div>
+          <div class="card-1-bottom">
+            <div class="card-1-stats">
+              <div class="card-1-stat">
+                <div class="card-1-num">200x</div>
+                <div class="card-1-label">stronger</div>
+              </div>
+              <div class="card-1-divider"></div>
+              <div class="card-1-stat">
+                <div class="card-1-num">87%</div>
+                <div class="card-1-label">lower emissions</div>
+              </div>
+            </div>
+            <div class="card-1-tagline">Advanced materials for a stronger tomorrow.</div>
+          </div>
+        </div>
+
+        <!-- Card 2: Price -->
+        <div class="card" id="card-price">
+          <div class="k-nav">
+            <div class="k-logo">
+              <svg class="k-logo-svg" viewBox="0 0 54 42" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+                <polygon points="2,40 18,6 34,40" />
+                <polygon points="20,40 37,6 52,40" />
+              </svg>
+              <span>Kessler</span>
+            </div>
+            <div class="k-menu">
+              <span>PRODUCTS</span>
+              <span>·</span>
+              <span class="k-menu-pill">PRICING</span>
+              <span>·</span>
+              <span>CONTACT</span>
+            </div>
+          </div>
+          <div class="card-2-price"><sup>$</sup>2,400</div>
+          <div class="card-2-sub">PER MONTH · INDUSTRIAL</div>
+          <div class="card-2-plans">
+            <div class="card-2-plan-row"><span>Pilot</span><span>$299</span></div>
+            <div class="card-2-plan-row"><span>Industrial</span><span>$2,400</span></div>
+            <div class="card-2-plan-row"><span>Foundry</span><span>Custom</span></div>
+          </div>
+          <button type="button" class="card-2-btn" data-action="Kessler pilot requested">Start a pilot</button>
+        </div>
+
+        <!-- Card 3: Case -->
+        <div class="card" id="card-case">
+          <div class="card-3-bg"></div>
+          <div class="card-3-veil"></div>
+          <div class="k-nav">
+            <div class="k-logo">
+              <svg class="k-logo-svg" viewBox="0 0 54 42" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+                <polygon points="2,40 18,6 34,40" />
+                <polygon points="20,40 37,6 52,40" />
+              </svg>
+              <span>Kessler</span>
+            </div>
+            <div class="k-menu">
+              <span>PRODUCTS</span>
+              <span>·</span>
+              <span>IMPACT</span>
+              <span>·</span>
+              <span>ABOUT</span>
+            </div>
+          </div>
+          <div class="card-3-kicker">CASE STUDY · ATLAS RAIL</div>
+          <div class="card-3-title">How Atlas Rail cut track weight by a third in eighteen months</div>
+          <div class="card-3-stats">
+            <div class="card-3-stat-col">
+              <div class="card-3-stat-num">34%</div>
+              <div class="card-3-stat-label">lighter track</div>
+            </div>
+            <div class="card-3-stat-col">
+              <div class="card-3-stat-num">3.4x</div>
+              <div class="card-3-stat-label">service life</div>
+            </div>
+            <div class="card-3-stat-col">
+              <div class="card-3-stat-num">0</div>
+              <div class="card-3-stat-label">unplanned closures</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Vision -->
+        <div class="card" id="card-vision">
+          <div class="k-nav">
+            <div class="k-logo">
+              <svg class="k-logo-svg" viewBox="0 0 54 42" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+                <polygon points="2,40 18,6 34,40" />
+                <polygon points="20,40 37,6 52,40" />
+              </svg>
+              <span>Kessler</span>
+            </div>
+            <div class="k-menu">
+              <span>PRODUCTS</span>
+              <span>·</span>
+              <span class="k-menu-pill">VISION</span>
+              <span>·</span>
+              <span>ABOUT</span>
+            </div>
+          </div>
+          <div class="card-4-tiles">
+            <div class="card-4-tile-1"></div>
+            <div class="card-4-tile-2"></div>
+            <div class="card-4-quote">
+              The Kessler vision: <em>materials that outlast the people who made them.</em>
+            </div>
+          </div>
+          <div class="card-4-footer">
+            <div>How Kessler pours alloy<br>at the edge of the desert</div>
+            <div>Manifesto · 6 min</div>
+          </div>
+        </div>
+
+        <!-- Card 5: Alloy -->
+        <div class="card" id="card-alloy">
+          <div class="card-5-bg"></div>
+          <div class="k-nav">
+            <div class="k-logo">
+              <svg class="k-logo-svg" viewBox="0 0 54 42" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+                <polygon points="2,40 18,6 34,40" />
+                <polygon points="20,40 37,6 52,40" />
+              </svg>
+              <span>Kessler</span>
+            </div>
+            <div class="k-menu">
+              <span>PRODUCTS</span>
+              <span>·</span>
+              <span>IMPACT</span>
+              <span>·</span>
+              <span>ABOUT</span>
+            </div>
+          </div>
+          <div class="card-5-left">
+            The carbon‑negative<br><em>alloy.</em>
+          </div>
+          <div class="card-5-right">
+            <div class="card-5-spec-row"><span>Product</span><span>K-Alloy 7</span></div>
+            <div class="card-5-spec-row"><span>Tensile</span><span>1,940 MPa</span></div>
+            <div class="card-5-spec-row" style="cursor: pointer;" data-action="Downloading K-Alloy 7 Datasheet"><span>Datasheet</span><span>PDF ↗</span></div>
+          </div>
+        </div>
+
+        <!-- Card 6: Journal -->
+        <div class="card" id="card-journal">
+          <div class="k-nav">
+            <div class="k-logo">
+              <svg class="k-logo-svg" viewBox="0 0 54 42" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+                <polygon points="2,40 18,6 34,40" />
+                <polygon points="20,40 37,6 52,40" />
+              </svg>
+              <span>Kessler</span>
+            </div>
+            <div class="k-menu">
+              <span>PRODUCTS</span>
+              <span>·</span>
+              <span class="k-menu-pill">JOURNAL</span>
+              <span>·</span>
+              <span>ABOUT</span>
+            </div>
+          </div>
+          <div class="card-6-title">
+            Journal
+            <em>field notes from the flats</em>
+          </div>
+          <div class="card-6-posts">
+            <div class="card-6-post" style="cursor: pointer;" data-action="Reading: Mining nothing but light on the salt flats">
+              <div class="card-6-thumb" style="background-image: url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/7b6ad638-89ec-4dec-be74-d36fbff3ea53.webp'); background-color: #C0C8D0;"></div>
+              <div class="card-6-kicker">FIELD NOTES</div>
+              <div class="card-6-post-title">Mining nothing but light on the salt flats</div>
+            </div>
+            <div class="card-6-post" style="cursor: pointer;" data-action="Reading: Atacama, year one">
+              <div class="card-6-thumb" style="background-image: url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/62b0d7c1-3eb7-44bd-9b19-57b975fb250f.webp'); background-color: #242230;"></div>
+              <div class="card-6-kicker">PLANTS</div>
+              <div class="card-6-post-title">Atacama, year one</div>
+            </div>
+            <div class="card-6-post" style="cursor: pointer;" data-action="Reading: Why we melt sand at noon">
+              <div class="card-6-thumb" style="background-image: url('https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/0e201fcd-ffc0-46a0-bd06-faa07bf0e84b.webp'); background-color: #26160F;"></div>
+              <div class="card-6-kicker">PROCESS</div>
+              <div class="card-6-post-title">Why we melt sand at noon</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 3. CANVAS FX LAYER -->
+      <canvas class="fx" id="canvas-fx"></canvas>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE TOAST FEEDBACK -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <div class="toast-dot"></div>
+    <span id="toast-text"></span>
   </div>
 
   <script>
-    const FILMS = [
-  {
-    "id": "valley",
-    "title": "The Silent Valley",
-    "romaji": "SHIZUKANA TANI",
-    "kanji": "\u9759\u304b\u306a\u8c37",
-    "year": 1958,
-    "decade": "1950s",
-    "genre": "Drama",
-    "minutes": 104,
-    "synopsis": "A schoolteacher returns to the mountain village that exiled her father, and finds the valley has kept every one of its secrets.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4d86c57b-d104-4aa1-81ef-b0465e53e456.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/ee7bf218-e76b-4f0b-8018-5c7673167134.webp"
-  },
-  {
-    "id": "bluehour",
-    "title": "The Blue Hour",
-    "romaji": "AO NO TOKI",
-    "kanji": "\u9752\u306e\u523b",
-    "year": 1962,
-    "decade": "1960s",
-    "genre": "Romance",
-    "minutes": 97,
-    "synopsis": "Over one long evening in a harbour town, a widow and a stranger trade small lies until the light runs out.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/436573a0-e67c-4a98-a455-63c2f3b12b56.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/b38f6ceb-5669-460e-a79f-44aac10cf0b9.webp"
-  },
-  {
-    "id": "river",
-    "title": "River of Salt",
-    "romaji": "SHIO NO KAWA",
-    "kanji": "\u5869\u306e\u5ddd",
-    "year": 1964,
-    "decade": "1960s",
-    "genre": "Drama",
-    "minutes": 121,
-    "synopsis": "Two brothers drag a salt barge downriver to a city that no longer wants anything they carry.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/78cc6281-fa26-4c4b-a56e-4051d98f5e53.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/46c9dc27-40b4-4f46-b317-d418493d1144.webp"
-  },
-  {
-    "id": "summer",
-    "title": "The Last Summer",
-    "romaji": "SAIGO NO NATSU",
-    "kanji": "\u6700\u5f8c\u306e\u590f",
-    "year": 1966,
-    "decade": "1960s",
-    "genre": "Drama",
-    "minutes": 109,
-    "synopsis": "The summer before the dam floods their village, three friends set fire to everything they cannot take with them.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4cb4b0e3-f66e-4018-80da-bf27194d9df7.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/807cf564-8e33-4d07-9710-6c4057617027.webp"
-  },
-  {
-    "id": "green",
-    "title": "The Green Road",
-    "romaji": "MIDORI NO MICHI",
-    "kanji": "\u7dd1\u306e\u9053",
-    "year": 1969,
-    "decade": "1960s",
-    "genre": "Mystery",
-    "minutes": 101,
-    "synopsis": "A surveyor mapping a forest road keeps finding the same footprints, always one day ahead of him.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/92ea5e03-079f-40b5-831e-3920de452ac4.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/b098397a-25a0-40a2-8c0c-853e704d12af.webp"
-  },
-  {
-    "id": "noon",
-    "title": "Noon in Ashes",
-    "romaji": "HAI NO SHOGO",
-    "kanji": "\u7070\u306e\u6b63\u5348",
-    "year": 1971,
-    "decade": "1970s",
-    "genre": "Western",
-    "minutes": 112,
-    "synopsis": "A rider crosses a white desert to settle an old debt, and learns too late who sent him.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/bf8411e5-96a0-4e15-9e5b-9424af3a4af0.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/63303cbc-878a-4b30-8b74-beb58e9d69f1.webp"
-  },
-        {
-    "id": "observer",
-    "title": "The Observer",
-    "romaji": "KANSATSUSHA",
-    "kanji": "\u89b3\u5bdf\u8005",
-    "year": 1973,
-    "decade": "1970s",
-    "genre": "Thriller",
-    "minutes": 96,
-    "synopsis": "A night watchman begins to suspect that the building he guards has started watching him back.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/5427a8a9-6ee9-4109-b87a-0a56a57b7f31.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/5f4e47f7-73d4-4b2e-9309-b121918c07cd.webp"
-  },
-  {
-    "id": "birds",
-    "title": "The Fallen Birds",
-    "romaji": "OCHITA TORI",
-    "kanji": "\u843d\u3061\u305f\u9ce5",
-    "year": 1975,
-    "decade": "1970s",
-    "genre": "Drama",
-    "minutes": 118,
-    "synopsis": "When the birds stop singing over a frontier town, the mayor's daughter is the only one who goes looking for the reason.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/0aac8386-a8e6-4d88-af36-4fc28f72e3ed.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/1891c942-91da-4122-bc2a-a6eda1e47647.webp"
-  },
-  {
-    "id": "storm",
-    "title": "Light in the Storm",
-    "romaji": "ARASHI NO HI",
-    "kanji": "\u5d50\u306e\u706f",
-    "year": 1978,
-    "decade": "1970s",
-    "genre": "Drama",
-    "minutes": 127,
-    "synopsis": "A lighthouse keeper and his son wait out a three-day storm with a shipwrecked sailor who will not give his name.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/577349f6-7e98-44de-8d49-e31a6a24bea9.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/85da8829-ec22-4ea6-afea-5030db9a4501.webp"
-  },
-  {
-    "id": "tide",
-    "title": "The Long Tide",
-    "romaji": "NAGAI SHIO",
-    "kanji": "\u9577\u3044\u6f6e",
-    "year": 1981,
-    "decade": "1980s",
-    "genre": "Drama",
-    "minutes": 99,
-    "synopsis": "A fisherman's wife counts the tides on the harbour wall while her husband's boat fails to come home.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/e6854198-b0f0-4954-a40e-54b96ff9e95f.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/1097505b-b8a6-4a9b-ae55-d0bdda9e4b0b.webp"
-  },
-  {
-    "id": "war",
-    "title": "A Quiet War",
-    "romaji": "SHIZUKANA SENSO",
-    "kanji": "\u9759\u304b\u306a\u6226\u4e89",
-    "year": 1985,
-    "decade": "1980s",
-    "genre": "Comedy",
-    "minutes": 103,
-    "synopsis": "Two neighbours fight a silent war over a garden wall for thirty years, and neither will say how it began.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/813ee4f0-93cd-4a6e-ad4e-6215e32b973e.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/daf21539-a532-47d2-93ef-2f0b25253a7a.webp"
-  },
-  {
-    "id": "door",
-    "title": "Red Door",
-    "romaji": "AKAI TOBIRA",
-    "kanji": "\u8d64\u3044\u6249",
-    "year": 1989,
-    "decade": "1980s",
-    "genre": "Thriller",
-    "minutes": 114,
-    "synopsis": "A projectionist follows a reel of unknown film through the corridors of a cinema on its final night.",
-    "spine": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/300603f2-d1bd-4e11-bc74-7cf8ec680f6a.webp",
-    "cover": "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/16cedd91-cac5-45a8-b8e2-3b0edf680cc6.webp"
-  }
-];
+    (function() {
+      // CARD DATA AND METRICS
+      const CARDS = [
+        { id: 'home', original: 70411, distilled: 6140, saved: 64271, pct: '91% less', url: 'kessler.co/' },
+        { id: 'price', original: 41208, distilled: 4960, saved: 36248, pct: '88% less', url: 'kessler.co/pricing' },
+        { id: 'case', original: 98432, distilled: 6300, saved: 92132, pct: '94% less', url: 'kessler.co/cases/atlas-rail' },
+        { id: 'vision', original: 55870, distilled: 8215, saved: 47655, pct: '85% less', url: 'kessler.co/vision' },
+        { id: 'alloy', original: 63904, distilled: 5512, saved: 58392, pct: '91% less', url: 'kessler.co/products/k-alloy-7' },
+        { id: 'journal', original: 47316, distilled: 7602, saved: 39714, pct: '84% less', url: 'kessler.co/journal' }
+      ];
 
-    // Preload all 12 covers and spines
-    FILMS.forEach(f => {
-      const imgC = new Image();
-      imgC.src = f.cover;
-      const imgS = new Image();
-      imgS.src = f.spine;
-    });
+      const PALETTE = ['#D61a1a', '#FF3636', '#FF4D4D', '#FF6B6B', '#FFA1A1', '#FFD4D4', '#FFF0F0'];
 
-    // Motion & Geometry State
-    let s = 17; // Opens on Noon in Ashes (index 5 in middle copy: 5 + 12 = 17)
-    let T = 17;
-    let hover = -1;
-    let active = 5;
-    let mx = window.innerWidth / 2;
-    let my = window.innerHeight / 2;
-    let cx = mx;
-    let cy = my;
-    let tiltX = 0;
-    let tiltY = 0;
-    let onCover = false;
-    let isOpen = false;
-    let isDragging = false;
-    let dragStartX = 0;
-    let dragStartT = 0;
-    let didDrag = false;
-    let wheelTimer = null;
-    let lastTime = performance.now();
-    let blobRafId = null;
+      // DOM ELEMENTS
+      const beltEl = document.getElementById('belt');
+      const canvas = document.getElementById('canvas-fx');
+      const ctx = canvas.getContext('2d');
+      const badgeNumEl = document.getElementById('badge-num');
+      const badgePctEl = document.getElementById('badge-pct');
+      const toastEl = document.getElementById('toast');
+      const toastTextEl = document.getElementById('toast-text');
 
-    // Elements
-    const hProbe = document.getElementById('h-probe');
-    const stage = document.getElementById('stage');
-    const shelf = document.getElementById('shelf');
-    const playRing = document.getElementById('play-ring');
-    const cursor = document.getElementById('cursor');
-    const captionTitle = document.getElementById('caption-title');
-    const captionSubtitle = document.getElementById('caption-subtitle');
-    const captionYear = document.getElementById('caption-year');
-    const tabIndicator = document.getElementById('tab-indicator');
-    const tabButtons = Array.from(document.querySelectorAll('.tab-btn'));
-    const arrowPrev = document.getElementById('arrow-prev');
-    const arrowNext = document.getElementById('arrow-next');
-    const detailDialog = document.getElementById('detail-dialog');
-    const detailClose = document.getElementById('detail-close');
-    const detailWatch = document.getElementById('detail-watch');
-    const detailTitle = document.getElementById('detail-title');
-    const detailSubtitle = document.getElementById('detail-subtitle');
-    const detailMeta = document.getElementById('detail-meta');
-    const detailSynopsis = document.getElementById('detail-synopsis');
-    const detailPosterImg = document.getElementById('detail-poster-img');
-    const inkBlobs = Array.from(document.querySelectorAll('.ink-blob'));
-    
-    // Check reduced motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const cardEls = [
+        document.getElementById('card-home'),
+        document.getElementById('card-price'),
+        document.getElementById('card-case'),
+        document.getElementById('card-vision'),
+        document.getElementById('card-alloy'),
+        document.getElementById('card-journal')
+      ];
 
-    // Dimensions
-    let H = 300, ws = 50, d = 150, gap = 9;
-    function measureDimensions() {
-      H = hProbe.getBoundingClientRect().height || 300;
-      ws = H * 142 / 840;
-      d = H * 474 / 900;
-      gap = H * 0.03;
-      stage.style.setProperty('--ws', ws + 'px');
-      stage.style.setProperty('--d', d + 'px');
-      stage.style.setProperty('--h-val', H + 'px');
-    }
-    measureDimensions();
+      const codeEls = [
+        document.getElementById('code-0'),
+        document.getElementById('code-1'),
+        document.getElementById('code-2'),
+        document.getElementById('code-3'),
+        document.getElementById('code-4'),
+        document.getElementById('code-5')
+      ];
 
-    // Build 36 tapes (12 films x 3 copies)
-    const tapeEls = [];
-    const tapeLifts = new Array(36).fill(0);
+      // TOAST HELPER
+      let toastTimer = null;
+      function showToast(msg) {
+        toastTextEl.textContent = msg;
+        toastEl.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toastEl.classList.remove('show');
+        }, 2400);
+      }
 
-    for (let c = 0; c < 3; c++) {
-      for (let i = 0; i < 12; i++) {
-        const v = c * 12 + i;
-        const film = FILMS[i];
-        const tape = document.createElement('div');
-        tape.className = 'tape';
-        tape.dataset.v = v;
-        tape.dataset.film = i;
-
-        const sp = document.createElement('div');
-        sp.className = 'sp';
-        sp.style.backgroundImage = `url("${film.spine}")`;
-
-        const cv = document.createElement('div');
-        cv.className = 'cv';
-        cv.style.backgroundImage = `url("${film.cover}")`;
-
-        tape.appendChild(sp);
-        tape.appendChild(cv);
-        stage.appendChild(tape);
-
-        tape.addEventListener('pointerenter', () => {
-          hover = v;
+      // ATTACH CLICK LISTENERS FOR ALL CONTROLS
+      document.querySelectorAll('[data-action]').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          showToast(el.getAttribute('data-action'));
         });
-        tape.addEventListener('pointerleave', () => {
-          if (hover === v) hover = -1;
-        });
-        tape.addEventListener('click', () => {
-          if (didDrag) return;
-          const r = getRelR(v, s);
-          if (Math.abs(r) < 0.5) {
-            openDetail();
+      });
+
+      // REDUCED MOTION CHECK
+      const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let reducedMotion = mql.matches;
+      mql.addEventListener('change', (e) => {
+        reducedMotion = e.matches;
+      });
+
+      // KEYBOARD SCRUBBING & PAUSE TOGGLE
+      window.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.code === 'Space') {
+          e.preventDefault();
+          reducedMotion = !reducedMotion;
+          showToast(reducedMotion ? 'Conveyor motion paused' : 'Conveyor motion active');
+        } else if (e.key === 'ArrowRight') {
+          vel += 350;
+        } else if (e.key === 'ArrowLeft') {
+          vel -= 350;
+        }
+      });
+
+      // GEOMETRY & ENGINE STATE
+      let cw = 0;
+      let ch = 0;
+      let gap = 0;
+      let span = 0;
+      let period = 0;
+      let Lx = window.innerWidth / 2;
+      let dpr = 1;
+
+      let off = 0;
+      let vel = 0;
+      let hoverVal = 0;
+      let isHovered = false;
+
+      // DRAG STATE
+      let isDragging = false;
+      let lastPointerX = 0;
+      let lastPointerTime = 0;
+      let dragVel = 0;
+
+      // COUNTER STATE
+      let activeCardIndex = 0;
+      let shownTokens = Math.round((CARDS[0].original - CARDS[0].distilled) * 0.62);
+
+      // FREE SPARKS
+      const sparks = [];
+
+      // 32-BIT INTEGER HASH
+      function hash(a, b, c) {
+        let h = (Math.imul(a, 374761393) + Math.imul(b, 668265263) + Math.imul(c, 2147483647)) | 0;
+        h = Math.imul(h ^ (h >>> 13), 1274126177) | 0;
+        return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+      }
+
+      function mod(n, m) {
+        return ((n % m) + m) % m;
+      }
+
+      function clamp(val, min, max) {
+        return Math.max(min, Math.min(max, val));
+      }
+
+      // MEASURE ON LOAD & RESIZE
+      function measure() {
+        const firstCardRect = cardEls[0].getBoundingClientRect();
+        cw = firstCardRect.width;
+        ch = firstCardRect.height;
+
+        const isMobile = window.innerWidth <= 767;
+        gap = isMobile ? window.innerWidth * 0.07 : window.innerWidth * 0.0475;
+        span = cw + gap;
+        period = span * 6;
+        Lx = window.innerWidth / 2;
+
+        const beltRect = beltEl.getBoundingClientRect();
+        dpr = Math.min(2, window.devicePixelRatio || 1);
+        canvas.width = Math.round(beltRect.width * dpr);
+        canvas.height = Math.round(beltRect.height * dpr);
+        canvas.style.width = beltRect.width + 'px';
+        canvas.style.height = beltRect.height + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      // INITIAL BELT POSITION
+      measure();
+      // "starts at W/2 - 0.62 * cw, so first card is already about 12% past the line on load"
+      off = window.innerWidth / 2 - 0.62 * cw;
+
+      window.addEventListener('resize', () => {
+        measure();
+      });
+
+      // POINTER & TOUCH INTERACTIONS
+      beltEl.addEventListener('pointerenter', () => {
+        isHovered = true;
+      });
+      beltEl.addEventListener('pointerleave', () => {
+        isHovered = false;
+      });
+
+      beltEl.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        dragVel = 0;
+        lastPointerX = e.clientX;
+        lastPointerTime = performance.now();
+        beltEl.classList.add('is-dragging');
+        try {
+          beltEl.setPointerCapture(e.pointerId);
+        } catch (err) {}
+      });
+
+      beltEl.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const now = performance.now();
+        const dtMs = Math.max(8, now - lastPointerTime);
+        const dx = e.clientX - lastPointerX;
+        off += dx;
+        const instVel = (dx / dtMs) * 1000;
+        dragVel = instVel * 0.8 + dragVel * 0.2;
+        lastPointerX = e.clientX;
+        lastPointerTime = now;
+      });
+      
+      function onPointerUp(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        beltEl.classList.remove('is-dragging');
+        vel = dragVel; // carries as inertia
+        try {
+          beltEl.releasePointerCapture(e.pointerId);
+        } catch (err) {}
+      }
+
+      beltEl.addEventListener('pointerup', onPointerUp);
+      beltEl.addEventListener('pointercancel', onPointerUp);
+
+      // WHEEL SCRUBBING
+      window.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+          vel -= e.deltaX * 6;
+        }
+      }, { passive: true });
+
+      // MAIN ANIMATION LOOP
+      let lastTime = performance.now();
+
+      function tick(now) {
+        const dt = Math.min(0.1, (now - lastTime) / 1000);
+        lastTime = now;
+        const tSec = now / 1000;
+
+        // SPEED & INERTIA
+        const autoSpeed = reducedMotion ? 0 : -0.075 * window.innerWidth;
+        const hoverTarget = isHovered ? 1 : 0;
+        hoverVal += (hoverTarget - hoverVal) * Math.min(1, dt * 4);
+
+        const targetSpeed = autoSpeed * (1 - 0.65 * hoverVal);
+
+        if (!isDragging) {
+          vel += (targetSpeed - vel) * (1 - Math.exp(-2.2 * dt));
+          off += vel * dt;
+        }
+
+        // CLEAR CANVAS
+        ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+
+        // TRACK CROSSING CARD FOR BADGE
+        let crossingCardIdx = -1;
+        let crossingCut = 0;
+
+        // UPDATE EACH CARD & CODE BLOCK
+        for (let i = 0; i < 6; i++) {
+          const x = mod(off + i * span + span, period) - span;
+          const cut = clamp(Lx - x, 0, cw);
+          const cardEl = cardEls[i];
+          const codeEl = codeEls[i];
+
+          // 1. POSITION
+          const transformStr = 'translate3d(' + x.toFixed(2) + 'px, 0, 0)';
+          cardEl.style.transform = transformStr;
+          codeEl.style.transform = transformStr;
+
+          // 2. CARD CLIP & MASK
+          if (cut <= 0) {
+            cardEl.style.clipPath = 'none';
+            cardEl.style.webkitClipPath = 'none';
+            cardEl.style.maskImage = 'none';
+            cardEl.style.webkitMaskImage = 'none';
+            cardEl.style.visibility = 'visible';
+          } else if (cut >= cw) {
+            cardEl.style.visibility = 'hidden';
           } else {
-            T = Math.round(T + r);
+            cardEl.style.visibility = 'visible';
+            const clipStr = 'inset(0 0 0 ' + cut.toFixed(1) + 'px round 0 1.6vw 1.6vw 0)';
+            cardEl.style.clipPath = clipStr;
+            cardEl.style.webkitClipPath = clipStr;
+
+            const maskStr = 'linear-gradient(90deg, transparent 0px, transparent ' + cut.toFixed(1) + 'px, #000 ' + (cut + 26).toFixed(1) + 'px, #000 100%)';
+            cardEl.style.maskImage = maskStr;
+            cardEl.style.webkitMaskImage = maskStr;
           }
-        });
 
-        tapeEls.push(tape);
+          // 3. CODE CLIP & VISIBILITY
+          if (cut <= 0) {
+            codeEl.style.visibility = 'hidden';
+          } else {
+            codeEl.style.visibility = 'visible';
+            const rightInset = Math.max(0, cw - cut);
+            const codeClipStr = 'inset(0 ' + rightInset.toFixed(1) + 'px 0 0)';
+            codeEl.style.clipPath = codeClipStr;
+            codeEl.style.webkitClipPath = codeClipStr;
+          }
+
+          // CHECK IF THIS CARD IS CROSSING
+          if (cut > 0 && cut < cw) {
+            crossingCardIdx = i;
+            crossingCut = cut;
+          }
+
+          // 4. DRAW DISSOLVE FX ON CANVAS
+          if (cut > 0 && (x + cw) > Lx) {
+            drawFx(i, x, cut, tSec);
+          }
+        }
+
+        // UPDATE BADGE
+        if (crossingCardIdx !== -1) {
+          const cardData = CARDS[crossingCardIdx];
+          const progress = crossingCut / cw;
+          const targetNum = Math.round((cardData.original - cardData.distilled) * progress);
+
+          if (crossingCardIdx !== activeCardIndex) {
+            activeCardIndex = crossingCardIdx;
+            shownTokens = targetNum; // snap on change
+            badgePctEl.textContent = Math.round((cardData.saved / cardData.original) * 100) + '% less';
+          } else {
+            shownTokens += (targetNum - shownTokens) * Math.min(1, dt * 14);
+          }
+        }
+        badgeNumEl.textContent = '−' + Math.round(shownTokens).toLocaleString('en-US');
+
+        // UPDATE & DRAW SPARKS
+        if (!reducedMotion) {
+          for (let s = sparks.length - 1; s >= 0; s--) {
+            const spark = sparks[s];
+            spark.life -= dt;
+            if (spark.life <= 0) {
+              sparks.splice(s, 1);
+              continue;
+            }
+            spark.x += spark.vx * dt;
+            spark.y += spark.vy * dt;
+
+            ctx.globalAlpha = Math.min(1, spark.life * 2.2);
+            ctx.fillStyle = spark.color;
+            ctx.fillRect(spark.x, spark.y, spark.size, spark.size);
+          }
+          ctx.globalAlpha = 1.0;
+        } else {
+          sparks.length = 0;
+        }
+
+        requestAnimationFrame(tick);
       }
-    }
 
-    function getRelR(v, curS) {
-      let r = ((v - curS) % 36 + 54) % 36 - 18;
-      return r;
-    }
+      // DISSOLVE FX DRAW FUNCTION
+      function drawFx(cardIdx, x, cut, tSec) {
+        // 1. HAZE
+        const hazeWidth = Math.min(150, (x + cw) - Lx);
+        if (hazeWidth > 0) {
+          const hazeGrad = ctx.createLinearGradient(Lx, 0, Lx + 150, 0);
+          hazeGrad.addColorStop(0, 'rgba(255, 54, 54, 0.42)');
+          hazeGrad.addColorStop(1, 'rgba(255, 54, 54, 0)');
+          ctx.fillStyle = hazeGrad;
+          ctx.fillRect(Lx, 70, hazeWidth, ch);
+            }
+        
+        // 2. DITHERED PARTICLES FIXED TO CARD SURFACE
+        const R = 0.3 * cw;
+        const gxStart = Math.floor(cut / 3);
+        const gxEnd = Math.min(Math.floor((cut + R) / 3), Math.floor(cw / 3));
+        const totalRows = Math.floor(ch / 3);
 
-    function smoothstep(t) {
-      const x = Math.max(0, Math.min(1, t));
-      return x * x * (3 - 2 * x);
-    }
+        const twinkleTime = Math.floor(tSec * 9) + 97;
 
-    function getSmoothB(r) {
-      if (Math.abs(r) < 1) {
-        return (r + Math.sin(Math.PI * r) / Math.PI) / 2;
-      }
-      return Math.sign(r) * 0.5;
-    }
+        for (let gx = gxStart; gx <= gxEnd; gx++) {
+          const sx = x + gx * 3;
+          if (sx < Lx - 2) continue;
+          const d = Math.max(0, sx - Lx);
+          if (d > R) continue;
 
-    // Update Tab Indicator
-    function updateDecadeTab(filmIndex, instant) {
-      const film = FILMS[filmIndex];
-      const decade = film.decade;
-      tabButtons.forEach(btn => {
-        if (btn.dataset.decade === decade) {
-          btn.classList.add('active');
-          if (btn.offsetWidth > 0) {
-            if (instant) {
-              tabIndicator.style.transition = 'none';
-              tabIndicator.style.width = btn.offsetWidth + 'px';
-              tabIndicator.style.transform = `translateX(${btn.offsetLeft}px)`;
-              void tabIndicator.offsetHeight;
-              tabIndicator.style.transition = '';
+          const p = Math.pow(Math.max(0, 1 - d / R), 1.7);
+          if (p <= 0.001) continue;
+
+          for (let row = -5; row <= totalRows + 5; row++) {
+            const inside = (row >= 0 && row < totalRows);
+            let thresh = 0;
+
+            if (inside) {
+              thresh = p * 0.92;
             } else {
-              tabIndicator.style.width = btn.offsetWidth + 'px';
-              tabIndicator.style.transform = `translateX(${btn.offsetLeft}px)`;
+              const dRow = row < 0 ? -row : (row - totalRows + 1);
+              thresh = p * 0.16 * ((6 - dRow) / 5);
+            }
+
+            if (hash(gx, row, cardIdx) >= thresh) continue;
+
+            if (!reducedMotion && hash(gx, row, twinkleTime) < 0.22) continue;
+
+            const h2 = hash(row, gx, cardIdx + 31);
+
+            let colorIdx = 0;
+            if (d <= 10) {
+              colorIdx = 4 + Math.floor(h2 * 3);
+              if (colorIdx > 6) colorIdx = 6;
+            } else {
+              colorIdx = Math.floor(h2 * h2 * 7);
+              if (colorIdx > 6) colorIdx = 6;
+            }
+
+            const size = 1.1 + h2 * 1.7;
+            let jx = 0;
+            let jy = 0;
+            if (!reducedMotion) {
+              const h3 = hash(gx + 13, row + 29, cardIdx);
+              jx = (h2 - 0.5) * 1.6;
+              jy = (h3 - 0.5) * 1.6;
+            }
+
+            ctx.fillStyle = PALETTE[colorIdx];
+            ctx.fillRect(sx + jx, 70 + row * 3 + jy, size, size);
+          }
+        }
+
+        // 3. FREE SPARKS SPAWN
+        if (!reducedMotion) {
+          for (let s = 0; s < 3; s++) {
+            if (Math.random() < 0.70) {
+              const life = 0.3 + Math.random() * 0.8;
+              sparks.push({
+                x: Lx + Math.random() * 30,
+                y: 70 - 10 + Math.random() * (ch + 20),
+                vx: (-30 + Math.random() * 70) + 0.6 * vel,
+                vy: -25 + Math.random() * 50,
+                size: 0.8 + Math.random() * 1.8,
+                color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
+                life: life
+              });
             }
           }
-        } else {
-          btn.classList.remove('active');
-        }
-      });
-    }
-
-    // Initial caption and tab setup
-    function setInitialCaption(filmIndex) {
-      const film = FILMS[filmIndex];
-      captionTitle.innerHTML = `<span>${film.title}</span>`;
-      captionSubtitle.innerHTML = `<span>${film.romaji} / ${film.kanji}</span>`;
-      captionYear.innerHTML = `<span>${film.year}</span>`;
-      updateDecadeTab(filmIndex, true);
-    }
-    setInitialCaption(active);
-
-    window.addEventListener('load', () => {
-      measureDimensions();
-      updateDecadeTab(active, true);
-    });
-    window.addEventListener('resize', () => {
-      measureDimensions();
-      updateDecadeTab(active, false);
-    });
-
-    // Caption Swap Animation
-    function swapCaption(newFilmIndex, dir) {
-      const film = FILMS[newFilmIndex];
-      updateDecadeTab(newFilmIndex, false);
-
-      if (prefersReducedMotion.matches) {
-        captionTitle.innerHTML = `<span>${film.title}</span>`;
-        captionSubtitle.innerHTML = `<span>${film.romaji} / ${film.kanji}</span>`;
-        captionYear.innerHTML = `<span>${film.year}</span>`;
-        return;
-      }
-
-      const swapLine = (container, text) => {
-        const oldSpan = container.querySelector('span:not(.leaving)');
-        const newSpan = document.createElement('span');
-        newSpan.textContent = text;
-        container.appendChild(newSpan);
-
-        if (oldSpan) {
-          oldSpan.classList.add('leaving');
-          oldSpan.style.position = 'absolute';
-          const anim = oldSpan.animate([
-            { transform: 'translateY(0%)' },
-            { transform: `translateY(${-dir * 105}%)` }
-          ], {
-            duration: 650,
-            easing: 'cubic-bezier(.2,.8,.2,1)',
-            fill: 'both'
-          });
-          anim.onfinish = () => oldSpan.remove();
-        }
-
-        newSpan.animate([
-          { transform: `translateY(${dir * 105}%)` },
-          { transform: 'translateY(0%)' }
-        ], {
-          duration: 650,
-          easing: 'cubic-bezier(.2,.8,.2,1)',
-          fill: 'both'
-        });
-      };
-
-      swapLine(captionTitle, film.title);
-      swapLine(captionSubtitle, `${film.romaji} / ${film.kanji}`);
-      swapLine(captionYear, film.year.toString());
-    }
-
-    // Decade tab clicks
-    tabButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const dec = btn.dataset.decade;
-        let targetFilm = 0;
-        if (dec === 'ALL' || dec === '1950s') targetFilm = 0;
-        else if (dec === '1960s') targetFilm = 1;
-        else if (dec === '1970s') targetFilm = 5;
-        else if (dec === '1980s') targetFilm = 9;
-
-        const currentFilm = ((Math.round(T) % 12) + 12) % 12;
-        let diff = (targetFilm - currentFilm) % 12;
-        if (diff > 6) diff -= 12;
-        if (diff < -6) diff += 12;
-        T = Math.round(T) + diff;
-      });
-    });
-
-    // Arrow navigation
-    arrowPrev.addEventListener('click', () => {
-      T = Math.round(T) - 1;
-    });
-    arrowNext.addEventListener('click', () => {
-      T = Math.round(T) + 1;
-    });
-
-    // Keyboard navigation
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        if (isOpen) closeDetail();
-      } else if (e.key === 'ArrowLeft') {
-        if (!isOpen) T = Math.round(T) - 1;
-      } else if (e.key === 'ArrowRight') {
-        if (!isOpen) T = Math.round(T) + 1;
-      } else if (e.key === 'Enter') {
-        if (!isOpen) openDetail();
-      }
-    });
-
-    // Wheel scrub
-    window.addEventListener('wheel', (e) => {
-      if (isOpen) return;
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      T += (delta / (ws + gap)) * 0.5;
-      clearTimeout(wheelTimer);
-      wheelTimer = setTimeout(() => {
-        T = Math.round(T);
-      }, 160);
-    }, { passive: true });
-
-    // Drag scrub on shelf
-    shelf.addEventListener('pointerdown', (e) => {
-      if (isOpen) return;
-      isDragging = false;
-      didDrag = false;
-      dragStartX = e.clientX;
-      dragStartT = T;
-
-      const onPointerMove = (ev) => {
-        const dx = ev.clientX - dragStartX;
-        if (!isDragging && Math.abs(dx) > 5) {
-          isDragging = true;
-          didDrag = true;
-          shelf.classList.add('dragging');
-        }
-        if (isDragging) {
-          T = dragStartT - dx / (ws + gap);
-        }
-      };
-      
-      const onPointerUp = () => {
-        window.removeEventListener('pointermove', onPointerMove);
-        window.removeEventListener('pointerup', onPointerUp);
-        if (isDragging) {
-          T = Math.round(T);
-          shelf.classList.remove('dragging');
-          setTimeout(() => { didDrag = false; }, 60);
-        }
-        isDragging = false;
-      };
-
-      window.addEventListener('pointermove', onPointerMove);
-      window.addEventListener('pointerup', onPointerUp);
-    });
-
-    // Track mouse pointer
-    window.addEventListener('pointermove', (e) => {
-      mx = e.clientX;
-      my = e.clientY;
-    });
-
-    // Play ring action
-    playRing.addEventListener('click', () => {
-      openDetail();
-    });
-
-    // Button / link hover tracking for cursor .btn state
-    let hoveringBtn = false;
-    document.querySelectorAll('button, a').forEach(el => {
-      el.addEventListener('pointerenter', () => { hoveringBtn = true; });
-      el.addEventListener('pointerleave', () => { hoveringBtn = false; });
-    });
-
-    // Detail Dialog Open / Close
-    function openDetail() {
-      if (isOpen) return;
-      T = Math.round(T);
-      s = T;
-      const film = FILMS[active];
-
-      // Fill detail texts
-      detailSubtitle.textContent = `${film.romaji} / ${film.kanji}`;
-      detailTitle.textContent = film.title;
-      detailMeta.textContent = `${film.year} / ${film.genre.toUpperCase()} / ${film.minutes} MIN`;
-      detailSynopsis.textContent = film.synopsis;
-
-      // Set poster image
-      detailPosterImg.setAttribute('href', film.cover);
-      detailPosterImg.setAttribute('xlink:href', film.cover);
-
-      // Reset blobs
-      inkBlobs.forEach(b => b.setAttribute('r', '0'));
-
-      // Find active tape's cover rect
-      let activeTapeEl = null;
-      for (const t of tapeEls) {
-        if (parseInt(t.dataset.v, 10) === Math.round(s)) {
-          activeTapeEl = t;
-          break;
-        }
-      }
-      if (!activeTapeEl) activeTapeEl = tapeEls[17];
-      const cvEl = activeTapeEl.querySelector('.cv');
-      const rect = cvEl.getBoundingClientRect();
-
-      // Transform origin to cover center
-      const coverCenterX = rect.left + rect.width / 2;
-      const coverCenterY = rect.top + rect.height / 2;
-      detailDialog.style.transformOrigin = `${coverCenterX}px ${coverCenterY}px`;
-      detailDialog.style.visibility = 'visible';
-      isOpen = true;
-
-      const duration = prefersReducedMotion.matches ? 1 : 1050;
-
-      // Grow sheet out of cover
-      const topInset = rect.top;
-      const rightInset = window.innerWidth - rect.right;
-      const bottomInset = window.innerHeight - rect.bottom;
-      const leftInset = rect.left;
-
-      detailDialog.animate([
-        {
-          clipPath: `inset(${topInset}px ${rightInset}px ${bottomInset}px ${leftInset}px round 3px)`,
-          transform: 'rotate(-4.5deg)'
-        },
-        {
-          clipPath: 'inset(0px 0px 0px 0px round 0px)',
-          transform: 'rotate(0deg)'
-        }
-      ], {
-        duration: duration,
-        easing: 'cubic-bezier(.76,0,.18,1)',
-        fill: 'both'
-      });
-
-      // Text rises
-      const lines = detailDialog.querySelectorAll('.detail-left-col .detail-line-mask > *');
-      lines.forEach((line, idx) => {
-        const delay = prefersReducedMotion.matches ? 0 : 620 + idx * 75;
-        const lineDur = prefersReducedMotion.matches ? 1 : 900;
-        line.animate([
-          { transform: 'translateY(110%)' },
-          { transform: 'translateY(0%)' }
-        ], {
-          duration: lineDur,
-          delay: delay,
-          easing: 'cubic-bezier(.2,.8,.2,1)',
-          fill: 'both'
-        });
-      });
-
-      // Poster bleeds in
-      if (blobRafId) cancelAnimationFrame(blobRafId);
-      const inkStartTime = performance.now() + (prefersReducedMotion.matches ? -5000 : 520);
-      function inkLoop(now) {
-        let allDone = true;
-        inkBlobs.forEach(blob => {
-          const blobDelay = parseFloat(blob.dataset.delay) || 0;
-          const elapsed = now - inkStartTime - blobDelay;
-          if (elapsed <= 0) {
-            blob.setAttribute('r', '0');
-            allDone = false;
-          } else if (elapsed >= 1250) {
-            blob.setAttribute('r', '720');
-          } else {
-            const p = elapsed / 1250;
-            const ease = 1 - Math.pow(1 - p, 3);
-            blob.setAttribute('r', (720 * ease).toFixed(1));
-            allDone = false;
-          }
-        });
-
-        if (now - inkStartTime < 2400 && !allDone) {
-          blobRafId = requestAnimationFrame(inkLoop);
-        } else if (now - inkStartTime >= 2400) {
-          inkBlobs.forEach(blob => blob.setAttribute('r', '720'));
-        }
-      }
-      blobRafId = requestAnimationFrame(inkLoop);
-    }
-
-    function closeDetail() {
-      if (!isOpen) return;
-      if (blobRafId) cancelAnimationFrame(blobRafId);
-
-      // Read active tape rect
-      let activeTapeEl = null;
-      for (const t of tapeEls) {
-        if (parseInt(t.dataset.v, 10) === Math.round(s)) {
-          activeTapeEl = t;
-          break;
-        }
-      }
-      if (!activeTapeEl) activeTapeEl = tapeEls[17];
-      const cvEl = activeTapeEl.querySelector('.cv');
-      const rect = cvEl.getBoundingClientRect();
-
-      const topInset = rect.top;
-      const rightInset = window.innerWidth - rect.right;
-      const bottomInset = window.innerHeight - rect.bottom;
-      const leftInset = rect.left;
-
-      const duration = prefersReducedMotion.matches ? 1 : 850;
-
-      const anim = detailDialog.animate([
-        {
-          clipPath: 'inset(0px 0px 0px 0px round 0px)',
-          transform: 'rotate(0deg)'
-        },
-        {
-          clipPath: `inset(${topInset}px ${rightInset}px ${bottomInset}px ${leftInset}px round 3px)`,
-          transform: 'rotate(-4.5deg)'
-        }
-      ], {
-        duration: duration,
-        easing: 'cubic-bezier(.76,0,.18,1)',
-        fill: 'both'
-      });
-
-      anim.onfinish = () => {
-        detailDialog.style.visibility = 'hidden';
-        isOpen = false;
-        detailDialog.getAnimations().forEach(a => a.cancel());
-      };
-      }
-    
-    detailClose.addEventListener('click', closeDetail);
-    detailWatch.addEventListener('click', () => {
-      const originalText = detailWatch.textContent;
-      detailWatch.textContent = "PLAYING / 再生中...";
-      setTimeout(() => {
-        detailWatch.textContent = originalText;
-      }, 1500);
-    });
-
-    // Back link action
-    document.getElementById('back-link').addEventListener('click', (e) => {
-      e.preventDefault();
-      if (isOpen) closeDetail();
-    });
-
-    // Logo link action
-    document.getElementById('logo-link').addEventListener('click', (e) => {
-      e.preventDefault();
-      if (isOpen) closeDetail();
-      T = 17;
-    });
-
-    // Footer links
-    document.querySelectorAll('.footer-link').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-      });
-    });
-
-    // Main requestAnimationFrame loop
-    function mainLoop(now) {
-      const rawDt = (now - lastTime) / 1000;
-      lastTime = now;
-      const dt = Math.min(0.05, Math.max(0.001, rawDt));
-
-      // Spring physics for s
-      const k = prefersReducedMotion.matches ? 100 : (isDragging ? 18 : 5.2);
-      s += (T - s) * (1 - Math.exp(-k * dt));
-      if (Math.abs(T - s) < 1e-4) s = T;
-
-      // Normalise if s drifts beyond +-4 loops (48 tapes)
-      if (Math.abs(s - 17) > 48) {
-        const shift = Math.round((s - 17) / 12) * 12;
-        s -= shift;
-        T -= shift;
-      }
-
-      // Check active film change
-      const newActive = ((Math.round(s) % 12) + 12) % 12;
-      if (newActive !== active) {
-        let dir = Math.sign(T - s);
-        if (dir === 0) dir = 1;
-        swapCaption(newActive, dir);
-        active = newActive;
-      }
-
-      // Mouse smoothing for cursor
-      cx += (mx - cx) * (1 - Math.exp(-16 * dt));
-      cy += (my - cy) * (1 - Math.exp(-16 * dt));
-      cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-
-      // Tilt towards cursor
-      const W = window.innerWidth;
-      const shelfCenterY = window.innerHeight / 2;
-      onCover = !isOpen && (Math.abs(T - s) < 0.3) &&
-                (Math.abs(mx - W / 2) <= 0.55 * d) &&
-                (Math.abs(my - shelfCenterY) <= 0.55 * H);
-
-      let targetTiltY = 0;
-      let targetTiltX = 0;
-      if (onCover) {
-        targetTiltY = ((mx - W / 2) / (0.55 * d)) * 9;
-        targetTiltX = -((my - shelfCenterY) / (H / 2)) * 6;
-      } else {
-        targetTiltY = ((mx - W / 2) / W) * 5;
-        targetTiltX = 0;
-      }
-
-      tiltX += (targetTiltX - tiltX) * (1 - Math.exp(-7 * dt));
-      tiltY += (targetTiltY - tiltY) * (1 - Math.exp(-7 * dt));
-
-      // Cursor state resolution
-      let isOverNonActiveSpine = false;
-      if (!isOpen && hover !== -1) {
-        const hr = getRelR(hover, s);
-        if (Math.abs(hr) > 0.5) {
-          isOverNonActiveSpine = true;
         }
       }
 
-      cursor.className = 'cursor';
-      if (!isOpen) {
-        if (onCover) {
-          cursor.classList.add('open');
-        } else if (hoveringBtn) {
-          cursor.classList.add('btn');
-        } else if (isOverNonActiveSpine) {
-          cursor.classList.add('spine');
-        }
-      } else {
-        if (hoveringBtn) {
-          cursor.classList.add('btn');
-        }
-      }
-
-      // Play ring update
-      const playLeft = W / 2 - 0.5 * d - 6;
-      const playTop = shelfCenterY + 0.36 * H;
-      const playScale = isOpen ? 0 : smoothstep(Math.max(0, 1 - Math.abs(T - s) * 3));
-      playRing.style.left = `${playLeft}px`;
-      playRing.style.top = `${playTop}px`;
-      playRing.style.transform = `translate(-50%, -50%) scale(${playScale.toFixed(4)})`;
-
-      // Update tapes
-      const cullingBound = W / 2 + 1.5 * d;
-
-      for (let i = 0; i < 36; i++) {
-        const tape = tapeEls[i];
-        const v = i;
-        const r = getRelR(v, s);
-
-        // Horizontal position F(r)
-        const x = r * (ws + gap) + (d - ws + 1.6 * gap) * getSmoothB(r);
-
-        // Culling
-        if (Math.abs(x) > cullingBound) {
-          tape.style.visibility = 'hidden';
-          continue;
-        }
-        tape.style.visibility = 'visible';
-
-        // Hover lift
-        const isHovered = (hover === v) && (Math.abs(r) > 0.5);
-        const targetLift = isHovered ? 1 : 0;
-        const liftK = prefersReducedMotion.matches ? 100 : 12;
-        tapeLifts[i] += (targetLift - tapeLifts[i]) * (1 - Math.exp(-liftK * dt));
-
-        // Openness o
-        const o = smoothstep(Math.max(0, 1 - Math.abs(r)));
-
-        // Transforms
-        const rotY = -90 * o + tiltY * o;
-        const rotX = tiltX * o;
-        const rotZ = -4.5 * o;
-        const transZ = o * 0.2 * H;
-        const transY = -o * 0.025 * H - tapeLifts[i] * 0.045 * H;
-        const zIndex = Math.round(100 - Math.abs(r));
-
-        tape.style.transform = `translate3d(${x.toFixed(2)}px, ${transY.toFixed(2)}px, ${transZ.toFixed(2)}px) rotateZ(${rotZ.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
-        tape.style.zIndex = zIndex;
-        
-        // Face shading
-        const spEl = tape.children[0];
-        const cvEl = tape.children[1];
-        spEl.style.setProperty('--shade', (o * 0.55).toFixed(3));
-        cvEl.style.setProperty('--shade', ((1 - o) * 0.5).toFixed(3));
-      }
-
-      requestAnimationFrame(mainLoop);
-    }
-
-    requestAnimationFrame(mainLoop);
+      // START LOOP
+      requestAnimationFrame(tick);
+    })();
   </script>
 </body>
